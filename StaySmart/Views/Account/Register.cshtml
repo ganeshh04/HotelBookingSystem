@@ -1,0 +1,20 @@
+@model StaySmart.Models.ViewModels.RegisterViewModel
+@{ ViewData["Title"] = "Create account"; }
+<section class="section find-page">
+  <div class="form-card find-card">
+    <span class="eyebrow">JOIN STAYSMART</span>
+    <h1>Create your <em>account.</em></h1>
+    <p class="muted">Book faster and manage all your stays in one place.</p>
+    <form asp-action="Register" method="post">
+      <div asp-validation-summary="ModelOnly" class="validation"></div>
+      <div class="form-grid single">
+        <label asp-for="FullName">Full name<input asp-for="FullName" autocomplete="name" /><span asp-validation-for="FullName"></span></label>
+        <label asp-for="Email">Email<input asp-for="Email" autocomplete="username" /><span asp-validation-for="Email"></span></label>
+        <label asp-for="Password">Password <small>(8+ chars, upper-case, number, symbol)</small><input asp-for="Password" autocomplete="new-password" /><span asp-validation-for="Password"></span></label>
+        <label asp-for="ConfirmPassword">Confirm password<input asp-for="ConfirmPassword" autocomplete="new-password" /><span asp-validation-for="ConfirmPassword"></span></label>
+      </div>
+      <button class="btn btn-dark btn-wide" type="submit">Create account <span>↗</span></button>
+    </form>
+    <p class="fine-print">Already registered? <a class="text-link" asp-action="Login">Sign in</a></p>
+  </div>
+</section>

@@ -1,0 +1,43 @@
+@model List<Booking>
+@{ ViewData["Title"] = "All bookings"; var returnTo = Context.Request.Path + Context.Request.QueryString; }
+<section class="section staff-page">
+  <div class="staff-heading"><div><span class="eyebrow">STAYSMART · RESERVATIONS</span><h1>Find any <em>booking.</em></h1></div>
+    <a class="btn btn-dark" asp-action="Index">← Dashboard</a></div>
+  @if (TempData["Message"] != null) { <div class="notice">@TempData["Message"]</div> }
+  @if (TempData["Error"] != null) { <div class="validation">@TempData["Error"]</div> }
+
+  <form method="get" class="filter-bar">
+    <label>Guest / email / reference<input name="q" value="@ViewBag.Q" placeholder="e.g. Demo or A1B2C3D4" /></label>
+    <label>Status<select name="status"><option value="">All</option>
+      @foreach (var s in Enum.GetValues<BookingStatus>()) { <option value="@s" selected="@((BookingStatus?)ViewBag.Status == s)">@s</option> }
+    </select></label>
+    <label>Check-in from<input type="date" name="from" value="@ViewBag.From" /></label>
+    <label>Check-in to<input type="date" name="to" value="@ViewBag.To" /></label>
+    <button class="btn btn-dark" type="submit">Filter</button>
+    <a class="btn btn-outline" asp-action="Bookings">Reset</a>
+  </form>
+
+  <div class="table-card"><div class="table-heading"><div><h2>@Model.Count result(s)</h2></div></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Guest</th><th>Room</th><th>Dates</th><th>Total</th><th>Status</th><th>Update</th><th>Audit</th></tr></thead>
+    <tbody>
+    @foreach (var b in Model) {
+      <tr>
+        <td><strong>@b.GuestName</strong><small>@b.Email</small><small class="ref">@b.BookingReference</small></td>
+        <td>@b.Room?.Name</td>
+        <td>@b.CheckIn.ToString("dd MMM yyyy") – @b.CheckOut.ToString("dd MMM yyyy")</td>
+        <td>₹@b.TotalPrice.ToString("N0")</td>
+        <td><span class="status status-@b.Status.ToString().ToLower()">@b.Status</span></td>
+        <td>
+          <form asp-action="UpdateStatus" method="post" class="inline-form">
+            <input type="hidden" name="id" value="@b.Id" /><input type="hidden" name="returnTo" value="@returnTo" />
+            <select name="status">
+              @foreach (var s in Enum.GetValues<BookingStatus>()) { <option value="@s" selected="@(b.Status == s)">@s</option> }
+            </select><button class="mini-btn">Save</button>
+          </form>
+        </td>
+        <td><a class="mini-btn" asp-action="History" asp-route-id="@b.Id">History</a></td>
+      </tr>
+    }
+    </tbody></table></div></div>
+</section>

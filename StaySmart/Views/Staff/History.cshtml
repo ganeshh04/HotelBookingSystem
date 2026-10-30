@@ -1,0 +1,15 @@
+@model List<BookingHistory>
+@{ ViewData["Title"] = "Booking history"; var b = (Booking)ViewBag.Booking; }
+<section class="section staff-page">
+  <div class="staff-heading"><div><span class="eyebrow">AUDIT TRAIL · @b.BookingReference</span><h1>Who changed <em>what.</em></h1>
+    <p class="muted">@b.GuestName · @b.Room?.Name · @b.CheckIn.ToString("dd MMM yyyy") – @b.CheckOut.ToString("dd MMM yyyy")</p></div>
+    <a class="btn btn-dark" asp-action="Bookings">← All bookings</a></div>
+  <div class="table-card"><div class="table-scroll"><table>
+    <thead><tr><th>When (UTC)</th><th>From</th><th>To</th><th>Changed by</th></tr></thead>
+    <tbody>
+    @foreach (var h in Model) {
+      <tr><td>@h.ChangedAtUtc.ToString("dd MMM yyyy HH:mm")</td><td>@(h.OldStatus ?? "— (created)")</td>
+          <td><span class="status status-@h.NewStatus.ToLower()">@h.NewStatus</span></td><td>@h.ChangedBy</td></tr>
+    }
+    </tbody></table></div></div>
+</section>

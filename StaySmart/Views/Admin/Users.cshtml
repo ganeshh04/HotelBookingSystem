@@ -1,0 +1,25 @@
+@model List<UserRow>
+@{ ViewData["Title"] = "User management"; }
+<section class="section staff-page">
+  <div class="staff-heading"><div><span class="eyebrow">STAYSMART · ACCESS CONTROL</span><h1>Who works <em>here.</em></h1>
+    <p class="muted">Promote a guest to Staff (or demote back). Admin accounts cannot be changed here.</p></div>
+    <a class="btn btn-dark" asp-controller="Staff" asp-action="Index">← Dashboard</a></div>
+  @if (TempData["Message"] != null) { <div class="notice">@TempData["Message"]</div> }
+  @if (TempData["Error"] != null) { <div class="validation">@TempData["Error"]</div> }
+  <div class="table-card"><div class="table-scroll"><table>
+    <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Change role</th></tr></thead>
+    <tbody>
+    @foreach (var u in Model) {
+      <tr>
+        <td><strong>@u.FullName</strong></td><td>@u.Email</td><td>@u.Roles</td>
+        <td>@if (!u.Roles.Contains("Admin")) {
+          <form asp-action="SetRole" method="post" class="inline-form">
+            <input type="hidden" name="id" value="@u.Id" />
+            <select name="role"><option value="Guest" selected="@(u.Roles == "Guest")">Guest</option><option value="Staff" selected="@(u.Roles == "Staff")">Staff</option></select>
+            <button class="mini-btn" type="submit">Save</button>
+          </form> } else { <small>Protected</small> }
+        </td>
+      </tr>
+    }
+    </tbody></table></div></div>
+</section>

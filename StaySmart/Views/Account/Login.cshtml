@@ -1,0 +1,21 @@
+@model StaySmart.Models.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Sign in";
+}
+<section class="section find-page">
+    <div class="form-card find-card">
+        <span class="eyebrow">WELCOME BACK</span>
+        <h1>Sign <em>in.</em></h1>
+        <p class="muted">Access your bookings, or the staff portal if you work here.</p>
+        <form asp-action="Login" method="post" asp-route-returnUrl="@ViewBag.ReturnUrl">
+            <div asp-validation-summary="ModelOnly" class="validation"></div>
+            <div class="form-grid single">
+                <label asp-for="Email">Email<input asp-for="Email" autocomplete="username" /><span asp-validation-for="Email"></span></label>
+                <label asp-for="Password">Password<input asp-for="Password" autocomplete="current-password" /><span asp-validation-for="Password"></span></label>
+                <label class="check"><input asp-for="RememberMe" type="checkbox" /> Keep me signed in</label>
+            </div>
+            <button class="btn btn-dark btn-wide" type="submit">Sign in <span>↗</span></button>
+        </form>
+        <p class="fine-print">New here? <a class="text-link" asp-action="Register">Create a guest account</a></p>
+    </div>
+</section>

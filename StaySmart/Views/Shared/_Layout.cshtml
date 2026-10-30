@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] — StaySmart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="nav"><a class="brand" asp-controller="Home" asp-action="Index"><span class="brand-mark">S</span> staysmart<span class="brand-dot">.</span></a><nav>
+            <a asp-controller="Home" asp-action="Index">Discover</a>
+            <a asp-controller="Concierge" asp-action="Index">AI Concierge ✦</a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <a asp-controller="Bookings" asp-action="My">My bookings</a>
+                @if (User.IsInRole("Admin") || User.IsInRole("Staff")) { <a class="nav-staff" asp-controller="Staff" asp-action="Index">Staff portal ↗</a> }
+                <form asp-controller="Account" asp-action="Logout" method="post" class="nav-form"><button type="submit" class="nav-link-btn">Sign out (@User.Identity.Name)</button></form>
+            }
+            else
+            {
+                <a asp-controller="Bookings" asp-action="Find">Find my booking</a>
+                <a asp-controller="Account" asp-action="Login">Sign in</a>
+                <a class="nav-staff" asp-controller="Account" asp-action="Register">Register</a>
+            }
+        </nav></header>
+    <main>@RenderBody()</main>
+    <footer class="footer"><div><a class="brand" asp-controller="Home" asp-action="Index">staysmart<span class="brand-dot">.</span></a><p>Thoughtful stays. Seamless booking.</p></div><span>Made for better getaways · © @DateTime.Now.Year StaySmart</span></footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

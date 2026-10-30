@@ -1,0 +1,43 @@
+@model StaySmart.Models.ViewModels.ConciergeViewModel
+@{ ViewData["Title"] = "AI Concierge"; }
+<section class="section find-page">
+  <div class="form-card concierge-card">
+    <span class="eyebrow">AI CONCIERGE</span>
+    <h1>Describe your trip, <em>we'll pick the room.</em></h1>
+    <p class="muted">Try: “Quiet room for 2 under ₹4000, we need a work desk” or “Family of 4 with kids, breakfast included”.</p>
+    <form asp-action="Index" method="post">
+      <div asp-validation-summary="ModelOnly" class="validation"></div>
+      <label asp-for="Request" class="full-field">What are you looking for?
+        <textarea asp-for="Request" rows="3" maxlength="500" placeholder="Tell us who's travelling, your budget and what matters to you…"></textarea>
+        <span asp-validation-for="Request"></span></label>
+      <button class="btn btn-dark btn-wide" type="submit">Recommend rooms <span>✦</span></button>
+    </form>
+  </div>
+
+  @if (Model.Result is { } res)
+  {
+    <div class="concierge-result">
+      <p class="ai-note"><span class="live-dot"></span> @(res.UsedAi ? "Recommended by AI" : "Keyword match") — @res.Reason</p>
+      @if (res.Rooms.Count == 0) { <div class="empty-state"><h3>No match found</h3><p>Try a different budget or guest count.</p></div> }
+      else
+      {
+        <div class="room-grid">
+        @foreach (var room in res.Rooms)
+        {
+          <article class="room-card">
+            <a class="room-image" asp-controller="Rooms" asp-action="Details" asp-route-id="@room.Id"><img src="@room.ImageUrl" alt="@room.Name" /><span class="room-tag">@room.Category stay</span></a>
+            <div class="room-info">
+              <div class="room-title-row"><h3>@room.Name</h3></div>
+              <p class="room-meta">Room @room.RoomNumber · Up to @room.Capacity guests</p>
+              <p class="room-desc">@room.Description</p>
+              <div class="room-bottom"><div><strong>₹@room.PricePerNight.ToString("N0")</strong><span> / night</span></div>
+                <a class="text-link" asp-controller="Bookings" asp-action="Create" asp-route-roomId="@room.Id"
+                   asp-route-checkIn="@(res.CheckIn?.ToString("yyyy-MM-dd"))" asp-route-checkOut="@(res.CheckOut?.ToString("yyyy-MM-dd"))" asp-route-guests="@(res.Guests ?? 1)">Book stay <span>→</span></a></div>
+            </div>
+          </article>
+        }
+        </div>
+      }
+    </div>
+  }
+</section>

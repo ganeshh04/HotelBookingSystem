@@ -1,0 +1,25 @@
+@model List<Booking>
+@{ ViewData["Title"] = "My bookings"; }
+<section class="section staff-page">
+  <div class="staff-heading"><div><span class="eyebrow">YOUR STAYS</span><h1>My <em>bookings.</em></h1></div>
+    <a class="btn btn-dark" asp-controller="Home" asp-action="Index">Book another stay ↗</a></div>
+  @if (TempData["Message"] != null) { <div class="notice">@TempData["Message"]</div> }
+  @if (TempData["Error"] != null) { <div class="validation">@TempData["Error"]</div> }
+  @if (!Model.Any()) { <div class="empty-state"><h3>No bookings yet</h3><p>When you book a room it will show up here.</p></div> }
+  else {
+  <div class="table-card"><div class="table-scroll"><table>
+    <thead><tr><th>Room</th><th>Dates</th><th>Total</th><th>Status</th><th>Reference</th><th></th></tr></thead>
+    <tbody>
+    @foreach (var b in Model) {
+      <tr>
+        <td><strong>@b.Room?.Name</strong><small>@b.Guests guest(s)</small></td>
+        <td>@b.CheckIn.ToString("dd MMM yyyy") – @b.CheckOut.ToString("dd MMM yyyy")</td>
+        <td>₹@b.TotalPrice.ToString("N0")</td>
+        <td><span class="status status-@b.Status.ToString().ToLower()">@b.Status</span></td>
+        <td class="ref">@b.BookingReference</td>
+        <td>@if (b.Status == BookingStatus.Confirmed && b.CheckIn.Date > DateTime.Today) {
+          <form asp-action="Cancel" method="post" onsubmit="return confirm('Cancel this booking?');"><input type="hidden" name="id" value="@b.Id" /><button class="mini-btn" type="submit">Cancel</button></form> }</td>
+      </tr>
+    }
+    </tbody></table></div></div> }
+</section>
